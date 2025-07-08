@@ -54,7 +54,7 @@ def login_page(request):
         auth_user = User.objects.get(email=email)  #get user object
         user = authenticate(request,username=auth_user.username, password=password)
         if user is not None:
-            login(request,user)
+            login(request,user) # session generate hunxa
             messages.success(request,'Login Successful')
             return redirect('index')
         else:
