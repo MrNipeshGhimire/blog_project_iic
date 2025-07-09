@@ -1,11 +1,16 @@
 from django.shortcuts import redirect,render
 from ..models import Blog
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
-    return render(request,'main/index.html')
+    blog = Blog.objects.all()
+    # if not blog:
+    #     return render(request,'main/index.html',{'message':"No blogs Available"})
+    return render(request,'main/index.html',{'blog':blog})
 
 
+@login_required
 def create_blog(request):
     errors = {}
     if request.method == 'POST':
