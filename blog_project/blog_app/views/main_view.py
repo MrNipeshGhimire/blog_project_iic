@@ -1,4 +1,4 @@
-from django.shortcuts import redirect,render
+from django.shortcuts import redirect,render, get_object_or_404
 from ..models import Blog
 from django.contrib.auth.decorators import login_required
 
@@ -48,7 +48,13 @@ def create_blog(request):
         
     else:   
         return render(request,'main/create_blog.html')
-    
+
+
+def single_page(request, id): 
+    # blog = Blog.objects.get(id=id)
+    blog = get_object_or_404(Blog, id=id)
+    print(blog)
+    return render(request,'main/single_page.html',{'blog':blog})
 
 
 
