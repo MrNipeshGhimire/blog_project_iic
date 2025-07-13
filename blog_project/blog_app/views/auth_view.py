@@ -60,9 +60,7 @@ def login_page(request):
         else:
             errors['password'] = 'Incorrect Password'
             return render(request,'auth/login_page.html',{'errors':errors,'data':request.POST})
-    return render(request,'auth/login_page.html')         
-
-
+    return render(request,'auth/login_page.html')
 
 def register_page(request):
     errors = {}     

@@ -80,7 +80,6 @@ def single_page(request, id):
 
 def edit_blog(request, id):
     previous_data = Blog.objects.get(id=id) 
-    print(previous_data.author)
     
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -88,21 +87,28 @@ def edit_blog(request, id):
         image = request.FILES.get('image')
         description = request.POST.get('description')
         
-        if previous_data.author == request.user:
+        if previous_data.author == request.user: 
             previous_data.title = title
             previous_data.category = category
-            previous_data.description = description
             if image:
-                previous_data.image = image
+                previous_data.image = image    
+            previous_data.description = description
             previous_data.save()
-            return redirect('single',id=previous_data.id) 
+            return redirect('single',id=previous_data.id)
         else:
-            messages.error(request,'You are not authorized to edit this Blog')
-            return redirect('single',id=previous_data.id) 
+            messages.error(request,'Timi authorized user hoinau !!')
+            return redirect('single',id=previous_data.id)
                 
-    # if previous_data.author == request.user:
-        
-        
     return render(request,'main/edit_blog.html',{'blog':previous_data})
     
 
+def delete_blog(request, blog_id):
+    # blog = Blog.objects.get(id=blog_id)
+    blog = get_object_or_404(Blog, id=blog_id)
+    if blog.author == request.user:
+        blog.delete()
+        return redirect('index')
+    else:
+        messages.error(request,'You are not authorized to delete this blog')
+        return redirect('single', id=blog.id)
+     
