@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
@@ -109,3 +109,36 @@ def logout_user(request):
     logout(request)
     return redirect('index')
     
+
+
+def user_profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    errors = {}
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        
+        if not username:
+            errors['username'] = "Username is required"
+        
+        if not email:
+            errors['email'] = "Email is required"
+        
+        if errors:
+            return render(request,'auth/user_profile.html',{'errors':errors})
+        # try:
+        user.username = username
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        print(user.username, user.email, user.first_name, user.last_name)
+        user.save()
+        messages.success(request,'Profile updated successfully')
+        return render(request,'auth/user_profile.html',{'message':"Profile Updated Successfully"})
+       
+    return render(request,'auth/user_profile.html',{'user':user})
+
+def change_password(request, user_id):
+    return render(request,'auth/change_password.html')
