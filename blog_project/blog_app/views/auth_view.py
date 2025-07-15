@@ -123,6 +123,7 @@ def user_profile(request, user_id):
         if not username:
             errors['username'] = "Username is required"
         
+        
         if not email:
             errors['email'] = "Email is required"
         
