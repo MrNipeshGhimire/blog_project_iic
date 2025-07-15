@@ -22,7 +22,13 @@
 
 <body>
     {% include "components/_navbar.html" %}
-
+{% if messages %}
+{% for message in messages %}
+  <script>
+    window.alert('{{message}}')
+  </script>
+{% endfor %}
+{% endif %}
 <!-- Hero Section -->
 <section class="bg-gray-50 py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-center">

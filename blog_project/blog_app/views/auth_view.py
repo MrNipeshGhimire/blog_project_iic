@@ -142,4 +142,37 @@ def user_profile(request, user_id):
     return render(request,'auth/user_profile.html',{'user':user})
 
 def change_password(request, user_id):
+    user = get_object_or_404(User,id=user_id)
+    errors = {}
+    if request.method == 'POST':
+        current = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm = request.POST.get('confirm_password')
+        
+        if not current:
+            errors['current_password'] = "Current password is required"
+        elif not user.check_password(current):
+            errors['current_password'] = "Current password is incorrect"
+        
+        if not new_password:
+            errors['new_password'] = "New password is required"
+        elif not confirm:
+            errors['confirm_password'] = "Confirm password is required"
+        elif new_password != confirm:
+            errors['confirm_password'] = "Confirm password don not matched"
+        elif current == new_password == confirm:
+            errors['confirm_password'] = "Current and new password is same"
+        
+        if errors:
+            return render(request,'auth/change_password.html',{'errors':errors,'data':request.POST})
+        
+        try:
+            user.set_password(new_password)
+            messages.success(request,'Password Change Successfully')
+            return redirect('index')
+        except Exception as e:
+            errors['confirm_password'] = f"Failed to change password{e}"
+            return render(request,'auth/current_password.html',{'errors':errors}) 
+        
+        
     return render(request,'auth/change_password.html')
